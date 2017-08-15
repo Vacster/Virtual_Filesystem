@@ -17,7 +17,6 @@ BasicFSMem::BasicFSMem(char *name, unsigned long size) : BasicFS(size){
     fstat(fd, &statbuf);
     size = statbuf.st_size;
   }
-
   disk_handler = (char*)mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (disk_handler == MAP_FAILED){
     perror("BasicFSMem");

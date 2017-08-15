@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     free(file_name);
   }
   if(mem_name != NULL){
-    Filesystem *fs = new Filesystem(0, file_name, MEM_TYPE);
+    Filesystem *fs = new Filesystem(0, mem_name, MEM_TYPE);
     fs->print_stats();
     free(mem_name);
   }

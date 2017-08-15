@@ -12,11 +12,10 @@
 Filesystem::Filesystem(unsigned long size, char *name, bool disk_type)
 :size(size),name(name),disk_type(disk_type){
   char file_name[13];
-
   if(disk_type == FILE_TYPE)
     strcpy(file_name, "./libFile.so");
   else
-    strcpy(file_name, "./libMem.so");
+    strcpy(file_name, "./libMems.so");
 
   sharedObj = dlopen(file_name, RTLD_NOW);
   if(sharedObj == NULL){
@@ -29,7 +28,6 @@ Filesystem::Filesystem(unsigned long size, char *name, bool disk_type)
 
   abstractFileSystem loadBasicFS =
     reinterpret_cast<abstractFileSystem>(dlsym(sharedObj, "loadBasicFS"));
-  //TODO: Should be getting size from metadata
   basicFS = (*loadBasicFS)(name, size);
   if(!size){
     struct metadata md;
@@ -37,6 +35,7 @@ Filesystem::Filesystem(unsigned long size, char *name, bool disk_type)
     basicFS->read_block(1, buffer);
     memcpy(&md, buffer, sizeof(struct metadata));
     bitmap_size = md.bitmap_size;
+    size = md.size;
   } else
     bitmap_size = ceil(((float)size) / BLOCK_SIZE / 8.0f / BLOCK_SIZE);
 }
